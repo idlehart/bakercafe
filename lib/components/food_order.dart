@@ -1,34 +1,73 @@
+import 'package:baker/components/food.dart';
+import 'package:baker/components/order_tray.dart';
+import 'package:baker/components/serving_tray.dart';
+import 'package:baker/components/text_box.dart';
 import 'package:baker/main.dart';
 import 'package:flame/components.dart';
-import 'package:flame/palette.dart';
+import 'package:flame/effects.dart';
+import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 
-class FoodOrder extends PositionComponent with Tappable {
+class FoodOrder extends PositionComponent with Tappable, HasGameRef<BakerCafe> {
   FoodOrder({
     required this.orderNumber,
     required this.content,
-  });
+  }) : super(anchor: Anchor.center, size: Vector2(100, 150));
 
   final int orderNumber;
   final List<Food> content;
-
+  late final Rect backgroundRect;
   @override
   Future<void> onLoad() async {
-    createChildren();
+    super.onLoad();
+    createFoodForOrder();
+    backgroundRect = size.toRect();
   }
 
-  void createChildren() {
-    double gap = 10;
+  @override
+  void onMount() {
+    final parent = this.parent;
+
+    if (parent is ServingTray) {
+      add(MoveToEffect(
+        Vector2(parent.size.x - size.x / 2 - 50, parent.size.y / 2),
+        EffectController(duration: .3),
+      ));
+    } else if (parent is OrderTray) {
+      position = Vector2(size.x / 2, parent.size.y / 2);
+    }
+    super.onMount();
+  }
+
+  @override
+  bool onTapDown(TapDownInfo info) {
+    if (gameRef.servingTray.children.isEmpty) {
+      changeParent(gameRef.servingTray);
+    }
+    return true;
+  }
+
+  void createFoodForOrder() {
+    List<TextBox> orderContent = [];
+
+    content.asMap().forEach(
+          (key, value) => orderContent.add(
+            TextBox(
+              value.label,
+              timePerChar: 0,
+              margins: 10,
+            )..position = Vector2(0, (key + 1) * 25),
+          ),
+        );
 
     final children = [
-      TextComponent(
-          text: '# $orderNumber',
-          textRenderer: TextPaint(
-            style: TextStyle(fontSize: 18, color: BasicPalette.black.color),
-          ))
-        ..anchor = Anchor.topLeft,
-// TODO: Find a way to spread the list of products into TextComponents.
-      // for (Food food in content)
+      TextBox(
+        '# $orderNumber',
+        align: Anchor.center,
+        timePerChar: 0,
+        margins: 10,
+      )..position = Vector2(0, 0),
+      ...orderContent
     ];
 
     addAll(children);
@@ -38,8 +77,6 @@ class FoodOrder extends PositionComponent with Tappable {
   void render(Canvas canvas) {
     super.render(canvas);
 
-    Rect rect = Offset.zero & const Size(100, 150);
-
-    canvas.drawRect(rect, Paint()..color = Colors.white);
+    canvas.drawRect(backgroundRect, Paint()..color = Colors.blueGrey);
   }
 }

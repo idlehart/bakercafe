@@ -7,15 +7,14 @@ class FoodSprite extends SpriteComponent with Tappable, HasGameRef {
   @override
   void update(double dt) {
     super.update(dt);
-    if (x > gameRef.size[0]) {
+    if (gameRef.size[0] * .8 < x) {
       resetPosition();
     }
     x += travelSpeed * dt;
   }
 
   @override
-  bool onTapDown(TapDownInfo event) {
-    print('TApped');
+  bool onTapDown(TapDownInfo info) {
     return true;
   }
 
