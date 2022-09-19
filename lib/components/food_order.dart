@@ -55,8 +55,9 @@ class FoodOrder extends SpriteComponent with Tappable, HasGameRef<BakerCafe> {
         parent.reset();
         parent.removeAll(parent.children);
         gameRef.score++;
-        if (gameRef.score == 10) {
+        if (gameRef.score % 3 == 0) {
           gameRef.orderTray.increaseSpawnTimer();
+          print ('NEW LEVEL');
         }
       }
     }

@@ -13,10 +13,11 @@ class OrderTray extends PositionComponent with HasGameRef<BakerCafe> {
   OrderTray() : super(anchor: Anchor.center);
 
   void increaseSpawnTimer() {
-    spawnTimerInterval = spawnTimerInterval * 0.5;
+    spawnTimerInterval = spawnTimerInterval * 0.95;
     remove(spawnTimer);
     add(spawnTimer = TimerComponent(
         period: spawnTimerInterval, repeat: true, onTick: addOrder));
+        print('$spawnTimerInterval');
   }
 
   @override
