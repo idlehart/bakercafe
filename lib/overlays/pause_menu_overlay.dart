@@ -8,50 +8,58 @@ class PauseMenuOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scoreKeeper = baker.scoreKeeper;
     return Center(
       child: Container(
           padding: const EdgeInsets.all(16),
           width: 400,
           height: 340,
           decoration: BoxDecoration(
-            color: Colors.blueGrey[600],
+            color: Colors.blueGrey.shade800,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('Baker Cafe',
+          child: DefaultTextStyle(
+            style: const TextStyle(fontFamily: 'monogram'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Baker Cafe',
+                    style: TextStyle(
+                      fontSize: 44,
+                      color: Colors.cyanAccent,
+                    )),
+                const SizedBox(
+                  height: 30,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.cyanAccent,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 24,
+                        horizontal: 64,
+                      )),
+                  onPressed: () {
+                    baker.overlays.remove(pauseMenu);
+                    baker.start();
+                  },
+                  child: Text(
+                    'Start Game',
+                    style: TextStyle(
+                        fontSize: 32, color: Colors.lightBlue.shade800, fontFamily: 'monogram'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Score: ${baker.score} ',
                   style: TextStyle(
                     fontSize: 32,
-                    color: Colors.white30,
-                  )),
-              const SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 24,
-                      horizontal: 64,
-                    )),
-                onPressed: () {
-                  baker.overlays.remove(pauseMenu);
-                  scoreKeeper?.reset();
-                  baker.start();
-                },
-                child: const Text('Start Game'),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              if (scoreKeeper != null && scoreKeeper.score > 0)
-                Text(
-                  scoreKeeper.scoreComponent.text,
-                  style: TextStyle(fontSize: 24, color: Colors.lightBlue[600]),
+                    color: Colors.lightBlue.shade500,
+                  ),
                 )
-            ],
+              ],
+            ),
           )),
     );
   }

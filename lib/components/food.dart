@@ -10,7 +10,7 @@ class Food {
     final random = Random();
 
     return List.generate(
-        random.nextInt(3) + 2, (index) => Food.fromInt(random.nextInt(7)));
+        random.nextInt(4) + 1, (index) => Food.fromInt(random.nextInt(7)));
   }
 
   Food._(this.id, this.label);

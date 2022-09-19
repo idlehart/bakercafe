@@ -5,25 +5,35 @@ import 'package:flame/components.dart';
 import 'package:collection/collection.dart';
 
 class OrderTray extends PositionComponent with HasGameRef<BakerCafe> {
-  late Timer _countDown;
+  // Timer? _countDown;
+  late TimerComponent spawnTimer;
+  double spawnTimerInterval = 3;
+  int travelSpeed = 75;
 
   OrderTray() : super(anchor: Anchor.center);
+
+  void increaseSpawnTimer() {
+    spawnTimerInterval = spawnTimerInterval * 0.5;
+    remove(spawnTimer);
+    add(spawnTimer = TimerComponent(
+        period: spawnTimerInterval, repeat: true, onTick: addOrder));
+  }
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    _countDown = Timer(1, repeat: true, onTick: (() => addOrder()));
-
+    // _countDown = Timer(spawnTimer, repeat: true, onTick: (() => addOrder()));
     children.register<FoodOrder>();
+    add(spawnTimer = TimerComponent(
+        period: spawnTimerInterval, repeat: true, onTick: addOrder));
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    const travelSpeed = 200;
-    _countDown.update(dt);
+    // _countDown.update(dt);
 
-    if (children.length > 3 && !gameRef.gameOver) {
+    if (children.length > 6 && !gameRef.gameOver) {
       gameRef.gameOver = true;
       gameRef.overlays.add(pauseMenu);
       gameRef.pauseEngine();
@@ -40,12 +50,12 @@ class OrderTray extends PositionComponent with HasGameRef<BakerCafe> {
   }
 
   @override
-  bool get debugMode => true;
+  bool get debugMode => false;
 
   void addOrder() {
     if (children.length <= 7) {
       FoodOrder newOrder = FoodOrder(
-          orderNumber: children.length + 1, content: Food.randomList());
+          orderNumber: gameRef.orderNummber++, content: Food.randomList());
 
       add(newOrder);
     }
