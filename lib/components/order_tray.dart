@@ -17,13 +17,11 @@ class OrderTray extends PositionComponent with HasGameRef<BakerCafe> {
     remove(spawnTimer);
     add(spawnTimer = TimerComponent(
         period: spawnTimerInterval, repeat: true, onTick: addOrder));
-        print('$spawnTimerInterval');
   }
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    // _countDown = Timer(spawnTimer, repeat: true, onTick: (() => addOrder()));
     children.register<FoodOrder>();
     add(spawnTimer = TimerComponent(
         period: spawnTimerInterval, repeat: true, onTick: addOrder));
